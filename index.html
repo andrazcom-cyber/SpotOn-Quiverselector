@@ -33,14 +33,8 @@
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Custom scrollbar styling for hourly forecast horizontal scroll */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased selection:bg-teal-500 selection:text-white">
@@ -65,6 +59,7 @@
             </a>
         </div>
     </header>
+
     <!-- Main Container -->
     <main class="max-w-6xl mx-auto px-4 py-6 space-y-6">
         <!-- Spot & Date Banner Controls -->
@@ -75,7 +70,7 @@
                         <i class="fa-solid font-bold fa-water"></i> Lokacija: Spot 27
                     </span>
                     <h2 class="text-2xl font-bold tracking-tight text-white">Urni pregled vetra in izbira winga</h2>
-                    <p class="text-sm text-slate-400 mt-1">Prestavljaj uro in prilagodi parametre kolesarja/surferja za optimalen wing.</p>
+                    <p class="text-sm text-slate-400 mt-1">Prestavljaj uro, nastavi svojo opremo in izberi optimalen wing.</p>
                 </div>
                 <!-- Date Picker input -->
                 <div class="flex items-center gap-3 bg-slate-950 p-2.5 rounded-xl border border-slate-800 self-start md:self-auto">
@@ -87,7 +82,8 @@
                 </div>
             </div>
         </section>
-        <!-- Main Interactive Grid: Controls vs Result -->
+
+        <!-- Main Interactive Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             <!-- Left Settings Panel (5 cols) -->
             <div class="lg:col-span-5 space-y-6">
@@ -95,6 +91,7 @@
                     <h3 class="text-base font-bold text-slate-200 border-b border-slate-800 pb-3 flex items-center gap-2">
                         <i class="fa-solid fa-sliders text-teal-400"></i> Nastavitve surferja
                     </h3>
+                    
                     <!-- Weight Slider -->
                     <div class="space-y-2">
                         <div class="flex justify-between items-center text-sm">
@@ -102,12 +99,8 @@
                             <span class="text-teal-400 font-bold text-base" id="weightDisplay">75 kg</span>
                         </div>
                         <input type="range" id="weightInput" min="40" max="120" value="75" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-teal-400">
-                        <div class="flex justify-between text-[11px] text-slate-500 font-medium">
-                            <span>40 kg</span>
-                            <span>80 kg</span>
-                            <span>120 kg</span>
-                        </div>
                     </div>
+
                     <!-- Skill Level Selector -->
                     <div class="space-y-2">
                         <label class="block text-sm text-slate-300 font-medium">Nivo izkušenj:</label>
@@ -117,7 +110,19 @@
                             <button type="button" class="skill-btn text-xs font-semibold py-2 px-3 rounded-lg transition-all text-slate-400 hover:text-slate-200" data-level="advanced">Napreden</button>
                         </div>
                     </div>
-                    <!-- Interactive Hour Slider (00:00 - 23:00) -->
+
+                    <!-- MY WINGS SELECTION (NEW FEATURE) -->
+                    <div class="space-y-2 pt-2 border-t border-slate-800">
+                        <label class="block text-sm text-slate-300 font-medium flex items-center justify-between">
+                            <span>Moji wingi (izberi opremo):</span>
+                            <span class="text-[10px] text-teal-400 font-normal">Označite svoje</span>
+                        </label>
+                        <div id="userWingsContainer" class="grid grid-cols-4 gap-2">
+                            <!-- Dynamically injected checkboxes for wing sizes -->
+                        </div>
+                    </div>
+
+                    <!-- Interactive Hour Slider -->
                     <div class="space-y-2 pt-2 border-t border-slate-800/80">
                         <div class="flex justify-between items-center text-sm">
                             <span class="text-slate-300 font-medium flex items-center gap-1.5">
@@ -126,16 +131,10 @@
                             <span class="text-cyan-400 font-extrabold text-lg" id="hourDisplay">14:00</span>
                         </div>
                         <input type="range" id="hourInput" min="0" max="23" value="14" class="w-full h-2.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-400">
-                        <div class="flex justify-between text-[11px] text-slate-500 font-medium">
-                            <span>00:00</span>
-                            <span>06:00</span>
-                            <span>12:00</span>
-                            <span>18:00</span>
-                            <span>23:00</span>
-                        </div>
                     </div>
                 </div>
-                <!-- Live Wind Metrics Card for Selected Hour -->
+
+                <!-- Live Wind Metrics Card -->
                 <div class="bg-gradient-to-br from-slate-900 to-slate-900/90 rounded-2xl border border-slate-800 p-5 space-y-4 shadow-lg">
                     <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                         <h4 class="text-xs uppercase tracking-wider font-bold text-slate-400">Napoved za ob <span id="currentHourTag" class="text-cyan-400">14:00</span></h4>
@@ -161,11 +160,10 @@
                     </div>
                 </div>
             </div>
+
             <!-- Right Recommended Wing Display (7 cols) -->
             <div class="lg:col-span-7 flex flex-col">
                 <div class="bg-gradient-to-br from-teal-950/60 via-slate-900 to-cyan-950/40 rounded-2xl border border-teal-500/30 p-6 sm:p-8 flex-1 flex flex-col justify-between shadow-2xl relative overflow-hidden">
-                    <!-- Subtle Glow Effect -->
-                    <div class="absolute -top-12 -right-12 w-48 h-48 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
                     <div>
                         <div class="flex items-center justify-between mb-4">
                             <span class="text-xs font-bold uppercase tracking-wider text-teal-400 flex items-center gap-2">
@@ -174,25 +172,23 @@
                             <span id="spotBadge" class="text-xs text-slate-400 font-mono bg-slate-900/80 px-2.5 py-1 rounded-md border border-slate-800">Veterček #27</span>
                         </div>
                         <div class="text-center my-6 sm:my-8 space-y-2">
-                            <p class="text-sm font-medium text-slate-400">Priporočena velikost winga</p>
+                            <p class="text-sm font-medium text-slate-400">Najboljši wing iz vaše opreme</p>
                             <div class="inline-flex items-baseline justify-center gap-2">
                                 <span id="wingSizeOutput" class="text-6xl sm:text-7xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-teal-300 via-cyan-300 to-white">
                                     5.0
                                 </span>
                                 <span class="text-2xl sm:text-3xl font-bold text-teal-400">m²</span>
                             </div>
-                            <p id="wingRangeText" class="text-xs font-semibold text-slate-400">Priporočljiv razpon: 4.5 m² – 5.0 m²</p>
+                            <p id="wingRangeText" class="text-xs font-semibold text-slate-400">Matematični izračun: 5.0 m²</p>
                         </div>
                     </div>
                     <div class="space-y-4">
-                        <!-- Recommendation Note Box -->
                         <div class="bg-slate-950/70 backdrop-blur rounded-xl p-4 border border-slate-800/80 text-sm text-slate-300 flex items-start gap-3">
                             <i id="recommendationIcon" class="fa-solid fa-circle-check text-emerald-400 text-lg mt-0.5"></i>
                             <p id="recommendationText" class="leading-relaxed">
-                                Pri 18 vozlih je veter idealen za stabilen let. Za vašo težo 75 kg priporočamo wing 5.0 m².
+                                Pri 18 vozlih je veter idealen za stabilen let.
                             </p>
                         </div>
-                        <!-- Quick Specs Summary -->
                         <div class="grid grid-cols-3 gap-2 text-center pt-2">
                             <div class="bg-slate-900/60 p-2.5 rounded-lg border border-slate-800">
                                 <span class="text-[10px] text-slate-500 uppercase block font-bold">Deska (Volumen)</span>
@@ -211,34 +207,18 @@
                 </div>
             </div>
         </div>
-        <!-- 24-Hour Timeline & Suitability Overview -->
+
+        <!-- 24-Hour Timeline -->
         <section class="bg-slate-900 rounded-2xl border border-slate-800 p-5 sm:p-6 space-y-4 shadow-xl">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
-                <div>
-                    <h3 class="text-base font-bold text-slate-100 flex items-center gap-2">
-                        <i class="fa-solid fa-chart-simple text-teal-400"></i> Celodnevni urnik & okna za vožnjo
-                    </h3>
-                    <p class="text-xs text-slate-400">Klikni na posamezno uro za hiter predogled izbire winga ali uporabi zgornji drsnik.</p>
-                </div>
-                <div class="flex items-center gap-3 text-xs font-semibold">
-                    <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Primerno (12+ kn)</span>
-                    <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Mejno (9-12 kn)</span>
-                    <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> Prešibko (&lt; 9 kn)</span>
-                </div>
+                <h3 class="text-base font-bold text-slate-100 flex items-center gap-2">
+                    <i class="fa-solid fa-chart-simple text-teal-400"></i> Celodnevni urnik & okna za vožnjo
+                </h3>
             </div>
-            <!-- Scrollable Hourly Forecast Cards -->
-            <div id="hourlyContainer" class="flex gap-2.5 overflow-x-auto pb-3 pt-1 no-scrollbar scroll-smooth">
-                <!-- Dynamically Populated by JavaScript -->
-            </div>
+            <div id="hourlyContainer" class="flex gap-2.5 overflow-x-auto pb-3 pt-1 no-scrollbar scroll-smooth"></div>
         </section>
     </main>
-    <!-- Footer -->
-    <footer class="border-t border-slate-800/80 mt-12 py-6 text-center text-xs text-slate-500">
-        <div class="max-w-6xl mx-auto px-4 space-y-1">
-            <p>Aplikacija za izračun velikosti winga na podlagi napovedi veterček.com (Spot 27).</p>
-            <p class="text-slate-600">© 2026 Interactive Wing Foil Calculator</p>
-        </div>
-    </footer>
+
     <!-- Logic Script -->
     <script>
         const hourlyForecastData = [
@@ -272,6 +252,11 @@
         let selectedSkill = 'intermediate';
         let selectedHour = 14;
 
+        // Available standard wing sizes to choose from
+        const availableWingSizes = [3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 7.0];
+        // User's owned wings (default checked)
+        let userWings = [3.5, 4.5, 5.0, 6.0];
+
         const weightInput = document.getElementById('weightInput');
         const weightDisplay = document.getElementById('weightDisplay');
         const hourInput = document.getElementById('hourInput');
@@ -279,6 +264,7 @@
         const skillBtns = document.querySelectorAll('.skill-btn');
         const dateSelect = document.getElementById('dateSelect');
         const vetercekLink = document.getElementById('vetercekLink');
+        const userWingsContainer = document.getElementById('userWingsContainer');
 
         const currentHourTag = document.getElementById('currentHourTag');
         const recommendationHour = document.getElementById('recommendationHour');
@@ -298,6 +284,32 @@
         const conditionsRating = document.getElementById('conditionsRating');
         const hourlyContainer = document.getElementById('hourlyContainer');
 
+        // Render User Wing Checkboxes
+        function renderUserWingsCheckboxes() {
+            userWingsContainer.innerHTML = '';
+            availableWingSizes.forEach(size => {
+                const isChecked = userWings.includes(size);
+                const label = document.createElement('label');
+                label.className = `flex items-center justify-center gap-1 p-1.5 rounded-lg border text-xs font-semibold cursor-pointer transition ${isChecked ? 'bg-teal-500/20 border-teal-500 text-teal-300' : 'bg-slate-950 border-slate-800 text-slate-500'}`;
+                label.innerHTML = `
+                    <input type="checkbox" value="${size}" ${isChecked ? 'checked' : ''} class="sr-only wing-checkbox">
+                    <span>${size}m²</span>
+                `;
+                label.querySelector('input').addEventListener('change', (e) => {
+                    const val = parseFloat(e.target.value);
+                    if (e.target.checked) {
+                        if (!userWings.includes(val)) userWings.push(val);
+                    } else {
+                        userWings = userWings.filter(w => w !== val);
+                    }
+                    userWings.sort((a,b) => a - b);
+                    updateUI();
+                    renderUserWingsCheckboxes();
+                });
+                userWingsContainer.appendChild(label);
+            });
+        }
+
         function calculateWingSize(weightKg, knots, skill) {
             const weightFactor = weightKg / 75.0;
             const windFactor = 18.0 / (knots || 1);
@@ -307,6 +319,21 @@
             let calculated = 5.0 * weightFactor * windFactor * skillFactor;
             calculated = Math.max(2.0, Math.min(7.5, calculated));
             return Math.round(calculated * 2) / 2;
+        }
+
+        // Find best match from user's owned wings
+        function getBestUserWing(exactNeeded) {
+            if (userWings.length === 0) return exactNeeded;
+            let closest = userWings[0];
+            let minDiff = Math.abs(userWings[0] - exactNeeded);
+            userWings.forEach(w => {
+                let diff = Math.abs(w - exactNeeded);
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    closest = w;
+                }
+            });
+            return closest;
         }
 
         function updateVetercekLink() {
@@ -324,7 +351,9 @@
             hourlyContainer.innerHTML = '';
             hourlyForecastData.forEach((item) => {
                 const hourFormatted = (item.hour < 10 ? '0' : '') + item.hour + ':00';
-                const wingSize = calculateWingSize(selectedWeight, item.knots, selectedSkill);
+                const exactWing = calculateWingSize(selectedWeight, item.knots, selectedSkill);
+                const bestWing = getBestUserWing(exactWing);
+                
                 let badgeBg = 'bg-rose-500/10 text-rose-400 border-rose-500/20';
                 let borderHighlight = 'border-slate-800';
 
@@ -354,7 +383,7 @@
                         <span class="text-base font-extrabold text-white block leading-none">${item.knots} <span class="text-[10px] font-normal text-slate-400">kn</span></span>
                     </div>
                     <span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded-full border ${badgeBg} mb-1">
-                        ${item.knots >= 9 ? wingSize.toFixed(1) + ' m²' : 'Šibko'}
+                        ${item.knots >= 9 ? bestWing.toFixed(1) + ' m²' : 'Šibko'}
                     </span>
                     <span class="text-[10px] text-slate-500 block">${item.dirText}</span>
                 `;
@@ -379,12 +408,11 @@
             windDirText.textContent = `${currentData.dirText} (${currentData.dirDeg}°)`;
             windCompassArrow.style.transform = `rotate(${currentData.dirDeg}deg)`;
 
-            const recommendedWing = calculateWingSize(selectedWeight, knots, selectedSkill);
-            wingSizeOutput.textContent = recommendedWing.toFixed(1);
+            const exactWing = calculateWingSize(selectedWeight, knots, selectedSkill);
+            const bestWing = getBestUserWing(exactWing);
 
-            const minRange = Math.max(2.0, (recommendedWing - 0.5)).toFixed(1);
-            const maxRange = (recommendedWing + 0.5).toFixed(1);
-            wingRangeText.textContent = `Priporočljiv razpon: ${minRange} m² – ${maxRange} m²`;
+            wingSizeOutput.textContent = bestWing.toFixed(1);
+            wingRangeText.textContent = `Natančen izračun: ${exactWing.toFixed(1)} m² (Izbrano iz vaši opreme)`;
 
             let boardVolMin = selectedWeight + 10;
             let boardVolMax = selectedWeight + 30;
@@ -406,28 +434,28 @@
                 windStatusBadge.className = 'text-[11px] font-bold px-2.5 py-1 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20';
                 windStatusBadge.textContent = 'Prešibak veter';
                 recommendationIcon.className = 'fa-solid fa-triangle-exclamation text-rose-400 text-lg mt-0.5';
-                recommendationText.textContent = `Veter ob ${formattedHour} je zelo šibak (${knots} kn). Za glisiranje boste potrebovali zelo velik wing (7.0m²+) ali foil z visoko učinkovitostjo/pumpanje.`;
+                recommendationText.textContent = `Veter ob ${formattedHour} je zelo šibak (${knots} kn). Iz vaši opreme predlagamo ${bestWing.toFixed(1)} m².`;
                 conditionsRating.textContent = 'Šibko (1/5)';
                 conditionsRating.className = 'text-sm font-bold text-rose-400';
             } else if (knots < 13) {
                 windStatusBadge.className = 'text-[11px] font-bold px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20';
                 windStatusBadge.textContent = 'Zmeren veter';
                 recommendationIcon.className = 'fa-solid fa-circle-info text-amber-400 text-lg mt-0.5';
-                recommendationText.textContent = `Ob ${formattedHour} piha lahek do zmeren veter (${knots} kn). Priporočamo wing ${recommendedWing.toFixed(1)} m² z nekoliko večjim foilom za lažji dvig.`;
+                recommendationText.textContent = `Ob ${formattedHour} piha zmeren veter (${knots} kn). Iz vaše opreme vzemite wing ${bestWing.toFixed(1)} m².`;
                 conditionsRating.textContent = 'Dobro (3/5)';
                 conditionsRating.className = 'text-sm font-bold text-amber-400';
             } else if (knots <= 28) {
                 windStatusBadge.className = 'text-[11px] font-bold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
                 windStatusBadge.textContent = 'Ugodni pogoji';
                 recommendationIcon.className = 'fa-solid fa-circle-check text-emerald-400 text-lg mt-0.5';
-                recommendationText.textContent = `Odlični pogoji za vožnjo ob ${formattedHour}! Veter ${knots} vozlov omogoča stabilen let z wingom velikosti ${recommendedWing.toFixed(1)} m².`;
+                recommendationText.textContent = `Odlični pogoji za vožnjo ob ${formattedHour}! Iz vaše opreme je optimalna izbira ${bestWing.toFixed(1)} m².`;
                 conditionsRating.textContent = 'Odlično (5/5)';
                 conditionsRating.className = 'text-sm font-bold text-teal-400';
             } else {
                 windStatusBadge.className = 'text-[11px] font-bold px-2.5 py-1 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20';
                 windStatusBadge.textContent = 'Močan veter!';
                 recommendationIcon.className = 'fa-solid fa-wind text-rose-400 text-lg mt-0.5';
-                recommendationText.textContent = `Ob ${formattedHour} piha zelo močan veter (${knots} kn). Izberite manjši wing (${recommendedWing.toFixed(1)} m²) in bodite previdni pri sunkih!`;
+                recommendationText.textContent = `Ob ${formattedHour} piha močan veter (${knots} kn). Izberite najmanjši ustrezen wing iz opreme: ${bestWing.toFixed(1)} m².`;
                 conditionsRating.textContent = 'Zahtevno (4/5)';
                 conditionsRating.className = 'text-sm font-bold text-rose-400';
             }
@@ -460,6 +488,8 @@
             });
         });
 
+        // Initialize
+        renderUserWingsCheckboxes();
         updateVetercekLink();
         updateUI();
     </script>
