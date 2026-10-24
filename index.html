@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Izbirnik Winga & Urna Napoved Veterček (Spot 27)</title>
+    <title>SpotOn</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -52,12 +52,7 @@
                 <div class="p-2 bg-gradient-to-tr from-teal-500 to-cyan-500 rounded-xl text-slate-950 font-bold">
                     <i class="fa-solid font-black fa-wind text-xl"></i>
                 </div>
-                <div>
-                    <h1 class="text-lg font-bold leading-tight">Wing Calculator & Napoved</h1>
-                    <p class="text-xs text-slate-400 flex items-center gap-1">
-                        <i class="fa-solid fa-location-dot text-teal-400"></i> Veterček.com - Spot 27
-                    </p>
-                </div>
+                <h1 class="text-lg font-bold leading-tight">SpotOn</h1>
             </div>
 
             <!-- External Link Button -->
@@ -75,9 +70,22 @@
         <section class="bg-slate-900 rounded-2xl border border-slate-800 p-4 sm:p-6 shadow-xl">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-teal-500/10 text-teal-400 border border-teal-500/20 mb-2">
-                        <i class="fa-solid font-bold fa-water"></i> Lokacija: Spot 27
-                    </span>
+                    <label for="spotSelect" class="inline-flex items-center gap-1.5 pl-2.5 pr-1 py-0.5 rounded-full text-xs font-semibold bg-teal-500/10 text-teal-400 border border-teal-500/20 mb-2">
+                        <i class="fa-solid font-bold fa-water"></i> Lokacija:
+                        <select id="spotSelect" class="bg-transparent text-teal-300 font-semibold focus:outline-none cursor-pointer pr-1">
+                            <option class="bg-slate-900 text-slate-100" value="1">Preluk</option>
+                            <option class="bg-slate-900 text-slate-100" value="2">Barkovlje</option>
+                            <option class="bg-slate-900 text-slate-100" value="3">Žusterna</option>
+                            <option class="bg-slate-900 text-slate-100" value="6">Antenal</option>
+                            <option class="bg-slate-900 text-slate-100" value="10">Viganj</option>
+                            <option class="bg-slate-900 text-slate-100" value="11">LSC</option>
+                            <option class="bg-slate-900 text-slate-100" value="7">Garda - Peler</option>
+                            <option class="bg-slate-900 text-slate-100" value="8">Garda - Ora</option>
+                            <option class="bg-slate-900 text-slate-100" value="4">Lago Morto</option>
+                            <option class="bg-slate-900 text-slate-100" value="12">Cavazzo</option>
+                            <option class="bg-slate-900 text-slate-100" value="27" selected>Spot 27</option>
+                        </select>
+                    </label>
                     <h2 class="text-2xl font-bold tracking-tight text-white">Urni pregled vetra in izbira winga</h2>
                     <p class="text-sm text-slate-400 mt-1">Prestavljaj uro in prilagodi parametre kolesarja/surferja za optimalen wing.</p>
                 </div>
@@ -257,7 +265,7 @@
     <!-- Footer -->
     <footer class="border-t border-slate-800/80 mt-12 py-6 text-center text-xs text-slate-500">
         <div class="max-w-6xl mx-auto px-4 space-y-1">
-            <p>Aplikacija za izračun velikosti winga na podlagi napovedi veterček.com (Spot 27).</p>
+            <p>Aplikacija za izračun velikosti winga na podlagi napovedi veterček.com.</p>
             <p class="text-slate-600">© 2026 Interactive Wing Foil Calculator</p>
         </div>
     </footer>
@@ -306,6 +314,8 @@
         const skillBtns = document.querySelectorAll('.skill-btn');
         const dateSelect = document.getElementById('dateSelect');
         const vetercekLink = document.getElementById('vetercekLink');
+        const spotSelect = document.getElementById('spotSelect');
+        const spotBadge = document.getElementById('spotBadge');
 
         const currentHourTag = document.getElementById('currentHourTag');
         const recommendationHour = document.getElementById('recommendationHour');
@@ -344,14 +354,16 @@
             return Math.round(calculated * 2) / 2;
         }
 
-        // Update External Vetercek Link on date change
+        // Update External Vetercek Link and spot badge on date/spot change
         function updateVetercekLink() {
+            const spotId = spotSelect.value;
+            spotBadge.textContent = `Veterček #${spotId}`;
             const rawDate = dateSelect.value; // YYYY-MM-DD
             if (rawDate) {
                 const parts = rawDate.split('-');
                 if (parts.length === 3) {
                     const formattedDate = `${parts[2]}.${parts[1]}.${parts[0]}`;
-                    vetercekLink.href = `https://vetercek.com/napoved/primerjava.php?dan=${formattedDate}&spot=27`;
+                    vetercekLink.href = `https://vetercek.com/napoved/primerjava.php?dan=${formattedDate}&spot=${spotId}`;
                 }
             }
         }
@@ -504,6 +516,10 @@
             updateVetercekLink();
         });
 
+        spotSelect.addEventListener('change', () => {
+            updateVetercekLink();
+        });
+
         skillBtns.forEach((btn) => {
             btn.addEventListener('click', () => {
                 skillBtns.forEach((b) => {
@@ -520,4 +536,5 @@
         updateUI();
     </script>
 </body>
-</html><script async src="/.netlify/scripts/hud?variant=owner-private" data-nf-variant="owner-private" data-netlify-site-id="c2c36e5d-adbd-4811-a6db-89148e5db9d7" data-app-host="app.netlify.com"></script>
+</html><script async src="/.netlify/scripts/ar" data-netlify-deploy-id="6adc6ae2972517e48b6b1781" data-netlify-site-id="c2c36e5d-adbd-4811-a6db-89148e5db9d7" data-agent-runner-id="6adc6a7f09f4e1ab01dba0aa"></script>
+<script async src="/.netlify/scripts/hud?variant=owner-private" data-nf-variant="owner-private" data-netlify-site-id="c2c36e5d-adbd-4811-a6db-89148e5db9d7" data-app-host="app.netlify.com"></script>
